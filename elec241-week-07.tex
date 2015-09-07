@@ -1,0 +1,52 @@
+\documentclass[11pt]{article}
+\hoffset -0.5in
+\voffset -1.5in
+\textheight 10in
+\textwidth 6in
+\pagestyle{plain}
+
+\usepackage{graphicx}
+\usepackage[mathscr]{eucal}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amscd}
+\usepackage{verbatim}
+
+%\usepackage{setspace}
+%\onehalfspacing
+%\doublespacing
+
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+
+\title{ELEC 241: CA Session 7 Notes\\Sampling}
+\author{Onkur Sen}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Continuous to Discrete: Basics of Sampling}
+{\bf Sampling} is a useful technique where we view a signal $s(t)$ not as a continuous function of time, but as a sequence of numbers $s(nT_s)$ that we ``sample" periodically (in this case, every $T_s$ seconds). The actual signal that we observe then is $x(t) = s(t) P_{T_s}(t)$, where $P_{T_s}(t)$ is a periodic pulse train. Then we can use the complex Fourier series of $P_{T_s}(t)$ to see that:
+\[x(t) = \sum_{k=-\infty}^{\infty} s(t) c_k e^{j 2 \pi \frac{k}{T_s} t} \]
+Suppose $s(t)$ has a corresponding spectrum $S(f)$. Then the spectrum of $x(t)$ is:
+\begin{eqnarray*}
+X(f) &=& \int_{-\infty}^{\infty} \left( \sum_{k=-\infty}^{\infty} s(t) c_k e^{j 2 \pi \frac{k}{T_s} t} \right) e^{-j 2 \pi f t} dt \\ 
+&=&  \sum_{k=-\infty}^{\infty} c_k \left(  \int_{-\infty}^{\infty} s(t) e^{-j 2 \pi (f-\frac{k}{T_s}) t} dt \right) \\
+&=&  \sum_{k=-\infty}^{\infty} c_k S \left(f - \frac{k}{T_s} \right)
+\end{eqnarray*}
+So we see that in the spectrum $X(f)$, the old spectrum $S(f)$ repeats every $\frac{1}{T_s}$ in the frequency domain.
+
+\section*{Discrete to Continuous: The Sampling Theorem} 
+Now suppose we have a sampled signal, and we want to recover the original signal with no error. Since the spectrum repeats itself, each repetition must carry separate information so that we can take the inverse Fourier transform back to the time-domain signal. This means that two adjacent spectra cannot overlap. This gives us two conditions to impose:
+
+\begin{itemize}
+\item The spectrum $S(f)$ must be zero after a certain point $W$ in the frequency domain (if not, different spectra would overlap). We say that $s(t)$ is {\bf bandlimited} to $W$ Hz.
+\item If two adjacent spectra cannot overlap, and the spectrum $S(f)$ repeat every $\frac{1}{T_s}$, then:
+\[W < \frac{1}{T_s} - W \Longrightarrow 2W < \frac{1}{T_s} \Longrightarrow \frac{1}{T_s} > 2W \Longrightarrow \boxed{T_s < \frac{1}{2W}}\]
+Alternatively, if we define $F_s = \frac{1}{T_s}$, we can say that $\boxed{F_s > 2W}$.
+\end{itemize}
+
+\noindent These two conditions are exactly what Claude Shannon discovered and together form the {\bf Sampling Theorem}. In addition, the highest value of $W = \frac{F_s}{2} = \frac{1}{2T_s}$ is called the {\bf Nyquist frequency} and is the highest frequency at which the signal contains energy and transmits information.
+
+\end{document}

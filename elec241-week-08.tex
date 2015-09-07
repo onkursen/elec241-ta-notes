@@ -1,0 +1,86 @@
+\documentclass[11pt]{article}
+\hoffset -0.5in
+\voffset -1in
+\textheight 9in
+\textwidth 6in
+\pagestyle{empty}
+
+\usepackage{graphicx}
+\usepackage[mathscr]{eucal}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amscd}
+\usepackage{verbatim}
+
+%\usepackage{setspace}
+%\onehalfspacing
+%\doublespacing
+
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+
+\title{ELEC 241: CA Session 8 Notes\\Quiz II Review}
+\author{Onkur Sen}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{eqnarray*}
+\begin{split}
+\mbox{{\bf \underline{Fourier Series}}}\\
+s(t) = \sum_{k=-\infty}^{\infty} c_k e^{j 2 \pi \frac{k}{T} t}\\
+c_k = \frac{1}{T} \int_0^T s(t) e^{-j 2 \pi \frac{k}{T} t} dt \\
+\mbox{For $s(t)$ real}, c_k = c_{-k}^{*}\\
+\mbox{Parseval}: \frac{1}{T} \int_0^T s^2(t) dt = \sum_{k=-\infty}^{\infty} \abs{c_k}^2\\
+\end{split}
+\qquad
+\begin{split}
+\mbox{{\bf \underline{Fourier Transform}}}\\
+\mathcal{F}[s(t)] = S(f) = \int_{-\infty}^{\infty} s(t) e^{-j 2 \pi f t} dt \\
+s(t) = \int_{-\infty}^{\infty} S(f) e^{+j 2 \pi f t} dt \\
+\mbox{Parseval}: \int_{-\infty}^{\infty} \abs{s(t)}^2 dt = \int_{-\infty}^{\infty} \abs{S(f)}^2 df\\
+\mbox{Linearity}: \mathcal{F}\left[\sum_k \epsilon_k s_k(t)\right] = \sum_k \epsilon_k \mathcal{F}\left[s_k(t)\right]\\
+x(t) \to y(t) \Longleftrightarrow Y(f) = X(f)H(f)\\
+\end{split}
+\end{eqnarray*}
+
+\begin{center}
+{\bf \underline{Special Spectra}}
+\end{center}
+\vspace{-5mm}
+\begin{eqnarray*}
+\begin{split}
+u(t) \longleftrightarrow \frac{1}{j 2 \pi f}\\
+e^{-at} u(t) \longleftrightarrow \frac{1}{j 2 \pi f + a}\\
+s(t)\cos(2\pi f_0 t) \longleftrightarrow \frac{1}{2}\left[ S(f-f_0) + S(f+f_0) \right]\\
+s(t)\sin(2\pi f_0 t) \longleftrightarrow \frac{1}{2}\left[ S(f-f_0) - S(f+f_0) \right]\\
+\end{split}
+\qquad
+\begin{split}
+s(t-\Delta) \longleftrightarrow S(f) e^{-j2 \pi f\Delta}\\
+\frac{ds}{dt}(t) \longleftrightarrow j2\pi f S(f)\\
+\int s(t) dt \longleftrightarrow \frac{1}{j 2 \pi f} S(f)\\
+t^n s(t) \longleftrightarrow \left( \frac{1}{-j 2 \pi} \frac{d}{df} \right)^n S(f)\\ 
+\end{split}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\begin{split}
+\mbox{{\bf \underline{Spectral Symmetries}}}\\
+s(t)\mbox{ real} \Longleftrightarrow S(f) = S(-f)^{*} \\
+s(t) \mbox{ even} \Longleftrightarrow S(f)  \mbox{ even} \\
+s(t) \mbox{ odd} \Longleftrightarrow S(f) \mbox{ odd} \\
+\end{split}
+\qquad
+\begin{split}
+\mbox{{\bf \underline{Op-Amps}}}\\
+\mbox{No current}\\
+V_+ = V_- \mbox{ (virtual short)}\\
+\mbox{Negative feedback}\\
+\mbox{Can cascade}\\
+\end{split}
+\end{eqnarray*}
+
+
+\end{document}

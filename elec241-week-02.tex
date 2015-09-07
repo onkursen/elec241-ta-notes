@@ -1,0 +1,118 @@
+\documentclass[11pt]{article}
+\hoffset -0.5in
+\voffset -1in
+\textheight 9in
+\textwidth 6in
+\pagestyle{plain}
+
+\usepackage{graphicx}
+\usepackage[mathscr]{eucal}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amscd}
+\usepackage{verbatim}
+
+%\usepackage{setspace}
+%\onehalfspacing
+%\doublespacing
+
+\title{ELEC 241: CA Session 2 Notes}
+\author{Onkur Sen}
+\date{September 5, 2012}
+
+\begin{document}
+\maketitle
+
+\section{LTI Systems}
+{\bf Linear time-invariant systems} are a cornerstone of ELEC 241 and will practically be assumed throughout the rest of the course, so it's useful to know what they actually are. Let's break it down into two parts.
+
+\subsection{Linear Systems}
+A linear system $S$ that takes in an input $x(t)$ has the following properties:
+\begin{enumerate}
+\item $S[x_1(t)+x_2(t)] = S[x_1(t)] + S[x_2(t)]$. \hfill (Sum of the inputs = Sum of the outputs)
+\item $S[cx(t)] = cS[x(t)]$, where $c = $ constant. \hfill (Constants can be pulled out)
+\end{enumerate}
+You can combine those two into one property as well:
+\[ S[c_1x_1(t)+c_2x_2(t)] = c_1S[x_1(t)] + c_2S[x_2(t)]. \]
+For those of you that have taken linear algebra, this is the same way that any matrix behaves.
+
+\subsection{Time-Invariant Systems}
+A system is time-invariant if it produces a time-shifted output given a time-shifted input.
+
+Let's write this mathematically. Suppose that our system $S$ takes in an input $x(t)$ and produces an output $y(t)$. Then $S$ is time-invariant if:
+\[S[x(t-\delta)] = S[x(t')]|_{t' = t - \delta} = y(t-\delta).\]
+This will make more sense with an example. Suppose $S[x(t)] = tx(t)$. Then the left side is:
+\[\mbox{LHS} = S[x(t-\delta)] = tx(t-\delta).\]
+\[\mbox{RHS} = y(t-\delta) = [t'x(t')]\vert_{t' = t - \delta} = (t-\delta)x(t-\delta).\]
+These two are not the same, so our system is not time-invariant. In general, $S[x(t)]$ is time-invariant if it does not depend on $t$ explicitly, i.e. it only depends on $t$ through $x(t)$.
+
+\subsection{So What?}
+So what does it mean if a system is LTI? Let's combine the results from the previous two signals:
+\begin{itemize}
+\item The sum of two inputs will produce the sum of the two outputs.
+\item Constants can move in and out of the system.
+\item Delaying the input will delay the output.
+\end{itemize}
+This means that if we combine signals in the above three ways, the combinations will be directly reflected on the output as well. Thus, we can add time-delayed multiples of our original signal(s) and produce an output {\bf by the exact same procedure}. We can codify this mathematically:
+
+\[ \sum_{k} S[c_k \cdot x_k(t-\delta_k)] = \sum_{k} c_k \cdot S[x_k(t')] \vert_{t'=t-\delta_k} \]
+
+\section{Impedances}
+Impedances are a way to represent circuit elements such that they satisfy {\bf Ohm's Law}:
+\[ \boxed{V = IZ.} \]
+\begin{itemize}
+\item For a resistor, $Z_R = R$.
+\item For a capacitor, $Z_C = \frac{1}{j2\pi fC}$.
+\item For an inductor, $Z_L = j2\pi fL$.
+\end{itemize}
+The explanations for how the impedances for capacitors and inductors arise can be seen by examining their respective voltage and current differential equations, which you won't have to worry about until ELEC 242.
+
+\section{Series Circuits (Voltage Divider)}
+Suppose you have a series of $N$ impedances $\{Z_k\}_{k=1}^N$. Then the {\bf equivalent impedance} is just:
+\[Z_{eq} = \sum_{k=1}^N Z_k.\]
+
+\subsection{Voltage Source}
+Suppose your source is a voltage $V_{in}$ ({\bf not necessarily constant}; it can be a function of time). Then the current across each impedance is then the same as the current across $Z_{eq}$, meaning that:
+\[ i_k = i(Z_{eq}) = \frac{V_{in}}{Z_{eq}}. \]
+As the name ``voltage divider" implies, each impedance takes away a certain voltage. By Ohm's Law:
+\[ V_k = i_k Z_k = \frac{Z_k}{Z_{eq}}V_{in}. \]
+{\bf Note}: This makes sense because if you apply KVL to the circuit, the sum of the voltages must add up to the source voltage.
+\[ \sum_{k=1}^N V_k = \sum_{k=1}^N \frac{Z_k}{Z_{eq}}V_{in}  =   \frac{V_{in}}{Z_{eq}} \sum_{k=1}^N Z_k = \frac{V_{in}}{Z_{eq}} Z_{eq} = V_{in}.\]
+
+\subsection{Current Source}
+Now suppose your source is a current $I_{in}$ (also not necessarily constant). Then the current across all impedances is the same:
+\[i_k = I_{in}.\]
+Furthermore, we can use Ohm's Law to easily get the voltage across each impedance:
+\[V_k = i_k Z_k = I_{in}Z_k.\]
+
+\section{Parallel Circuits (Current Divider)}
+Suppose you have $N$ impedances in a parallel layout. Then the equivalent impedance is:
+\[Z_{eq} = \left( \sum_{j=1}^N \frac{1}{Z_i} \right)^{-1}.\]
+
+\subsection{Voltage Source}
+Suppose your source is a voltage $V_{in}$. Then the voltage across each impedance in the parallel circuit is the same:
+\[V_k = V_{in}\]
+Using Ohm's Law, we get the current:
+\[ i_k = \frac{V_k}{Z} = \frac{V_{in}}{Z}. \]
+
+\subsection{Current Source}
+Now suppose your source is a current $I_{in}$. Then because the voltage is constant, we can equate the voltage of one element to the voltage of the equivalent impedance:
+\[ V_k = V(Z_{eq}) = I_{in} Z_{eq}. \]
+Finish up with Ohm's Law to get the current:
+\[ i_k = \frac{V_k}{Z_k} = \frac{Z_{eq}}{Z_k} I_{in}. \]
+
+\section{Hasitha's Addendum for Problem 3.8b}
+First, let's write the voltage in the middle as a voltage divider on the $R_1$, $R_2$ side: 
+\[ V_1 = \frac{R_2}{R_1 + R_2}. \]
+Same on the other side:
+\[ V_2 = \frac{R_4}{R_3 + R_4}. \]
+You want this voltage to be equal, so we can set these equations equal to each other:
+\begin{eqnarray*}
+\frac{R_2}{R_1 + R_2} &=&  \frac{R_4}{R_3 + R_4} \\
+R_2(R_3 + R_4) &=& R_4(R_1 + R_2) \qquad \mbox{(Cross-multiply)}  \\
+R_2R_3 + R_2R_4 &=& R_1R_4 + R_2R_4 \qquad \mbox{(Distribute)}
+\end{eqnarray*}
+The $R_2R_4$ terms will cancel, leaving you with $\boxed{R_2R_3 = R_1R_4.}$
+
+\end{document}

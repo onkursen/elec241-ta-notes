@@ -1,0 +1,88 @@
+\documentclass[11pt]{article}
+\hoffset -0.5in
+\voffset -1in
+\textheight 9in
+\textwidth 6in
+\pagestyle{empty}
+
+\usepackage{graphicx}
+\usepackage[mathscr]{eucal}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amscd}
+\usepackage{verbatim}
+
+%\usepackage{setspace}
+%\onehalfspacing
+%\doublespacing
+
+\title{ELEC 241: CA Session 4 Notes (Quiz I Review)}
+\author{Onkur Sen}
+\date{September 19, 2012}
+
+\begin{document}
+\maketitle
+
+\begin{eqnarray*}
+\begin{split}
+\mbox{{\bf \underline{Complex Exponentials}}}\\
+e^{j\theta} = \cos{\theta} + j\sin{\theta}\\
+\cos{\theta} = \frac{e^{j\theta} + e^{-j\theta}}{2}\\
+\sin{\theta} = \frac{e^{j\theta} - e^{-j\theta}}{2j}\\
+\cos{\theta} =\operatorname{Re}[e^{j\theta}] =\operatorname{Im}[je^{j\theta}]\\
+\sin{\theta} =\operatorname{Im}[e^{j\theta}] =\operatorname{Re}[-je^{j\theta}]
+\end{split}
+\qquad
+\begin{split}
+\mbox{{\bf \underline{Trigonometry}}}\\
+\sin{(x+y)} = \sin{x}\cos{y} + \cos{x}\sin{y}\\
+\cos{(x+y)} = \cos{x}\cos{y} - \sin{x}\sin{y}\\
+\sin{(2x)} = 2\sin{x}\cos{x}\\
+\cos{(2x)} = \cos^2{x} - \sin^2{x}\\
+\sin^2{x} + \cos^2{x} = 1\\
+1 + \cot^2{x} = \csc^2{x}\\
+\tan^2{x} + 1 = \sec^2{x}\\
+\end{split}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\begin{split}
+\mbox{{\bf \underline{Impedances}}}\\
+Z_R = R\\
+Z_C = \frac{1}{j2\pi fC}\\
+Z_L = j2\pi L\\
+\mbox{Series: } Z_{eq} = Z_1+Z_2 \\
+\mbox{Parallel: } Z_{eq} = Z_1 \vert \vert Z_2 = \frac{Z_1Z_2}{Z_1+Z_2} \\
+\mbox{Conductance: } G = \frac{1}{Z}
+\end{split}
+\qquad
+\begin{split}
+\mbox{{\bf \underline{Circuits}}}\\
+\mbox{Ohm's Law: } v = iZ\\
+\mbox{Voltage divider: } V_1 = \frac{Z_1}{Z_1+Z_2}V_{in} \\
+\mbox{Current divider: } i_1 = \frac{Z_2}{Z_1+Z_2}i_{in} \\
+\mbox{Power: } P = iv = i^2 Z = \frac{v^2}{Z}\\
+\mbox{KVL: } \sum_{loop} v_k = 0\\
+\mbox{KCL: } i_{in} - i_{out} = 0\\
+\end{split}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\begin{split}
+\mbox{{\bf \underline{LTI Systems}}}\\
+\sum \mbox{(scaled, time-shifted inputs)}\\
+\overset{S}{\Longrightarrow} \sum \mbox{(scaled, time-shifted outputs)}\\
+S \left[ \sum_{k=1}^\infty c_k x(t-\tau_k) \right] = \sum_{k=1}^\infty c_k y(t-\tau_k)
+\end{split}
+\qquad
+\begin{split}
+\mbox{{\bf \underline{Transfer Functions}}}\\
+H(f) = \frac{V_{out}}{V_{in}} \mbox{ OR } \frac{I_{out}}{V_{in}} \mbox{ OR }  \frac{V_{out}}{I_{in}} \mbox{ OR }  \frac{I_{out}}{I_{in}}\\
+\mbox{Low-pass filter: }  \lim_{f\rightarrow \infty} H(f) = 0, G = \vert H(0) \vert\\
+\mbox{High-pass filter: }  \lim_{f\rightarrow 0} H(f) = 0, G = \vert H(\infty) \vert\\
+\mbox{Cutoff Frequency: } \vert H(f_c) \vert = \frac{1}{\sqrt{2}} G
+\end{split}
+\end{eqnarray*}
+
+\end{document}

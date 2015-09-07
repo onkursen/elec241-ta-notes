@@ -1,0 +1,122 @@
+\documentclass[11pt]{article}
+\hoffset -0.5in
+\voffset -1in
+\textheight 9in
+\textwidth 6in
+\pagestyle{plain}
+
+\usepackage{graphicx}
+\usepackage[mathscr]{eucal}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amscd}
+\usepackage{verbatim}
+
+%\usepackage{setspace}
+%\onehalfspacing
+%\doublespacing
+
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+
+\title{ELEC 241: CA Session 6 Notes\\Let's Talk Fourier!}
+\author{Onkur Sen}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Motivation: Why Fourier?}
+Before we dive into the many types of Fourier analysis, it's important to pause and figure out why we're even studying it in the first place. To do this, we'll do this through a mental construction in steps:
+
+\begin{itemize}
+\item Let's start with an analogy to linear algebra. For any matrix, you can find its eigenvalues and eigenvectors. In particular, the eigenvectors are {\bf orthogonal} (their inner product is 0) and can be {\bf normalized} (multiplied by constants so that the inner product with itself is 1). With these two properties, the eigenvectors form a {\bf basis} for the space, meaning that any vector can be written as a weighted sum of the eigenvectors.
+\item What does this have to do with Fourier series? Well, it turns out that just like eigenvectors are a basis for a vector space, {\bf sines and cosines of different frequencies are eigenfunctions forming a basis for real periodic functions}.
+\item Because complex exponentials are combinations of sines and cosines, then {\bf complex exponentials are also a basis for real periodic functions}. However, because they are complex functions, they must satisfy certain conditions as we'll see below.
+\item So, you can write any periodic function as a sum of either sines and cosines or complex exponentials. This means that {\bf you can break up any signal in the time domain into discrete frequency components} (i.e., sinusoids with frequencies that are integer multiples of one fundamental frequency). Thus, we can see which frequency parts contribute to the formation of the signal.
+\item But what if we wanted to see a continuous {\bf spectrum} of a signal? This would allow us to see contributions from any frequency, freeing us from the discretization of a Fourier series.
+\item Enter the Fourier transform, which gives us a function in the {\bf frequency domain} (i.e., a function that takes in frequency, not time, as the argument) that corresponds to our original time-domain function.
+\item There are many variations of the Fourier transform that are used for different purposes. Efficiency in particular is pretty important; this is the reason for the development of the Fast Fourier Transform, as we'll see.
+\end{itemize}
+
+Let's get started.
+
+\section*{Classic Fourier Series}
+The book starts with complex Fourier series first, but given the derivation above, it makes more sense to start with the classic series.
+
+\noindent Let's take a signal $s(t)$ of period T (so it has frequency $\frac{1}{T}$). Then like I said above, we can write it as a weighted sum of sines and cosines:
+\[s(t) = \sum_{k=0}^{\infty} a_k \cos{\left(2 \pi \frac{k}{T} t \right)} + \sum_{k=0}^{\infty} b_k\sin{\left(2 \pi \frac{k}{T} t \right)}. \]
+However, when $k=0$, the cosine goes to 1, and the sine term goes to 0. So let's pull the zeroth term out separately:
+\[s(t) = a_0 + \sum_{k=1}^{\infty} a_k \cos{\left(2 \pi \frac{k}{T} t \right)} + \sum_{k=1}^{\infty} b_k\sin{\left(2 \pi \frac{k}{T} t \right)}. \]
+Because each function is an eigenfunction, the inner product of two distinct functions is zero. However, unlike vector spaces, we don't have a dot product here, so we have to define our inner product differently. Since the signal is periodic, we'll integrate the product of the two functions over a period (I use $[0,T]$, but you can use {\bf any period}):
+\[ \langle f,g \rangle = \mbox{inner product of $f$ and $g$} = \int_0^T f(t)g(t) dt.\]
+Furthermore, the inner product of a sinusoid with itself is $\frac{T}{2}$ (not 1 because of the extra stuff inside the sinusoid), and the inner product of two distinct sinusoids is 0, giving you the orthogonality conditions on page 116 of the book.\\
+
+\noindent How is this useful? Well, to actually obtain the coefficients $a_k$ and $b_k$ all you have to do is take the inner product of your signal with the associated sinusoid, and conveniently, only one integral is non-zero because of the orthogonality conditions:
+\begin{eqnarray*}
+\left\langle s(t), \cos{\left(2 \pi \frac{k}{T} t \right)}\right\rangle &=& \int_0^T s(t) \cos{\left(2 \pi \frac{k}{T} t \right)} dt \\
+&=& \int_0^T \left(\sum_{l=0}^{\infty} a_l \cos{\left(2 \pi \frac{l}{T} t \right)} + \sum_{l=0}^{\infty} b_l\sin{\left(2 \pi \frac{l}{T} t \right)} \right) \cos{\left(2 \pi \frac{k}{T} t \right)} dt \\
+&=& \int_0^T a_k \cos{\left(2 \pi \frac{k}{T} t \right)} \cos{\left(2 \pi \frac{k}{T} t \right)} dt \\
+&=& \frac{T}{2} a_k \mbox{ if } k \neq 0, \mbox{ else } T a_0
+\end{eqnarray*}
+A similar thing happens for the sine terms, so we get (relatively) simple integrals:
+\[ a_k = \frac{1}{T} \int_0^T s(t) dt \]
+\[ a_k = \frac{2}{T} \left\langle s(t), \cos{\left(2 \pi \frac{k}{T} t \right)}\right\rangle = \frac{2}{T} \int_0^T s(t) \cos{\left(2 \pi \frac{k}{T} t \right)} dt \]
+\[ b_k = \frac{2}{T} \left\langle s(t), \sin{\left(2 \pi \frac{k}{T} t \right)}\right\rangle = \frac{2}{T} \int_0^T s(t) \sin{\left(2 \pi \frac{k}{T} t \right)} dt \]
+
+\section*{Complex Fourier Series}
+
+Recall that we can write sines/cosines in terms of complex exponentials:
+\begin{eqnarray*}
+\cos{\left(2 \pi \frac{k}{T} t \right)} &=& \frac{1}{2} \left( e^{j 2 \pi \frac{k}{T} t} + e^{-j 2 \pi \frac{k}{T} t} \right)\\
+\sin{\left(2 \pi \frac{k}{T} t \right)} &=& \frac{1}{2j} \left( e^{j 2 \pi \frac{k}{T} t} - e^{-j 2 \pi \frac{k}{T} t} \right) \\
+&=& \frac{-j}{2} \left( e^{j 2 \pi \frac{k}{T} t} - e^{-j 2 \pi \frac{k}{T} t} \right)
+\end{eqnarray*}
+So we can write the classic Fourier series as:
+\[s(t) = a_0 + \sum_{k=1}^{\infty} a_k \frac{1}{2} \left( e^{j 2 \pi \frac{k}{T} t} + e^{-j 2 \pi \frac{k}{T} t} \right) + \sum_{k=1}^{\infty} b_k \frac{-j}{2} \left( e^{j 2 \pi \frac{k}{T} t} - e^{-j 2 \pi \frac{k}{T} t} \right). \]
+Let's combine like terms for the exponentials:
+\[s(t) = a_0 + \sum_{k=1}^{\infty} \frac{1}{2}(a_k - jb_k) e^{j 2 \pi \frac{k}{T} t} + \sum_{k=1}^{\infty} \frac{1}{2}(a_k + jb_k) e^{-j 2 \pi \frac{k}{T} t} \]
+Define $\boxed{c_k \equiv a_k - j b_k}$. Then notice that the second sum is exactly the conjugate of the first sum. Let's reindex by $k \to -k$:
+\begin{eqnarray*}
+s(t) &=& a_0 + \sum_{k=1}^{\infty} \frac{1}{2}(a_k - jb_k) e^{j 2 \pi \frac{k}{T} t} + \sum_{k=-\infty}^{-1} \frac{1}{2}(a_{-k} - jb_{-k})^{*} e^{j 2 \pi \frac{k}{T} t} \\
+&=& a_0 + \sum_{k=1}^{\infty} c_k e^{j 2 \pi \frac{k}{T} t} + \sum_{k=-\infty}^{-1} c_{-k}^{*} e^{j 2 \pi \frac{k}{T} t} \\
+\end{eqnarray*}
+Here we obtain our first condition on complex Fourier series. For real signals, we want to combine these two sums, so we must have $\boxed{c_{-k}^{*} = c_k}$, so that:
+\[s(t) = a_0 + \sum_{k\neq 0} c_k e^{j 2 \pi \frac{k}{T} t} \]
+Finally, recognizing that $e^0 = 1 \Rightarrow e^{j 2 \pi \frac{0}{T} t} = 1 \Rightarrow a_0 = a_0 e^{j 2 \pi \frac{0}{T} t}$, we have: 
+\[s(t) = \sum_{k = -\infty}^{\infty} c_k e^{j 2 \pi \frac{k}{T} t}, \mbox{ where } \boxed{c_0 = a_0}. \]
+
+\noindent The complex exponentials follow a similar set of orthogonality conditions as the sinusoids:
+\[\left\langle e^{+j 2 \pi \frac{k}{T} t}, e^{-j 2 \pi \frac{l}{T} t} \right\rangle = \int_0^T e^{+j 2 \pi \frac{k}{T} t} e^{-j 2 \pi \frac{l}{T} t} dt = \frac{1}{T} \mbox{ if } k = l \mbox{ else } 0\]
+This gives us an explicit method for obtaining $c_k$:
+
+\[c_k = \frac{1}{T} \int_0^T s(t) e^{-j 2 \pi \frac{k}{T} t} dt\]
+
+\section*{A Note: Parseval's Theorem}
+Recall that the RMS of a signal $s(t)$ is the square root of the power, so we can express the power in terms of the time-domain behavior. However, if you substitute the Fourier series expansion for $s(t)$, the orthogonality conditions kick in, and you can get an expression for the power in terms of frequency contributions: 
+
+\[P[s(t)] = \frac{1}{T} \int_0^T s^2(t) dt =  \sum_{k=-\infty}^{\infty} \abs{c_k}^2. \]
+Note that {\bf these expressions for power give the same value}.
+
+\section*{Fourier Transform}
+The Fourier transform is the continuous analog of the discrete $c_k$ in the Fourier series. Recall that:
+\[ c_k = \frac{1}{T} \int_0^T s(t) e^{-j 2 \pi \frac{k}{T} t} dt = \frac{1}{T} \int_{-\frac{T}{2}}^{\frac{T}{2}} s(t) e^{-j 2 \pi \frac{k}{T} t} dt \]
+Let $f=\frac{k}{T}$, and let $k$ vary. This is important because we will take $T \to \infty$, and we want to keep $f >0$.  Now define:
+\[ S_T(f) = T c_k = \int_{-\frac{T}{2}}^{\frac{T}{2}} s(t) e^{-j 2 \pi f t} dt \]
+Now we define the {\bf Fourier transform} as: 
+\[ S_T(f) = \lim_{T \to \infty} S_T(f) = \int_{-\infty}^{\infty} s(t) e^{-j 2 \pi f t} dt \]
+The interesting thing is that {\bf the signal need not be periodic anymore}! The Fourier transform is defined for any signal.
+
+\section*{Discrete-Time Fourier Transform (DTFT)}
+Now suppose instead of a regular continuous signal $s(t)$, we have a sampled version $s(n)$. Then the integral reduces to an infinite sum, and we get a different type of Fourier Transform called the {\bf Discrete-Time Fourier Transform (DTFT)}:
+\[ S(e^{j2\pi f}) = \sum_{n=-\infty}^{\infty} s(n)e^{-j2\pi fn}\]
+It is interesting to note that the DTFT of a signal has period 1; that is, $S(e^{j2\pi (f+1)}) = S(e^{j2\pi f})$. Furthermore, the DTFT obeys similar properties such as multiplication by time and differentiation as the regular Fourier Transform.
+
+\section*{Discrete Fourier Transform (DFT)}
+%One problem you might notice with the DTFT is that although we can evaluate the expression analytically in a finite amount of time, the actual straight computation required is infinite! 
+
+
+\section*{Fast Fourier Transform (FFT)}
+
+
+\end{document}

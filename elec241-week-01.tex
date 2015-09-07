@@ -1,0 +1,148 @@
+\documentclass[11pt]{article}
+\hoffset -0.5in
+\voffset -1in
+\textheight 9in
+\textwidth 6in
+\pagestyle{plain}
+
+\usepackage{graphicx}
+\usepackage[mathscr]{eucal}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amscd}
+\usepackage{verbatim}
+
+%\usepackage{setspace}
+%\onehalfspacing
+%\doublespacing
+
+\title{ELEC 241: CA Session 1 Notes}
+\author{Onkur Sen}
+\date{August 29, 2012}
+
+\begin{document}
+\maketitle
+
+\section{RMS}
+RMS stands for {\bf r}oot {\bf m}ean {\bf s}quare, and is a function you can call upon any {\bf periodic} signal $s(t)$. To understand and to get the form of the RMS value, it makes sense to work from the inside out. 
+
+\noindent We start with the original signal:
+\[s(t)\]
+Then we square it:
+\[s^2(t)\]
+From here, we take the mean, or average, with a calculus-based method (since you don't know how $s(t)$ changes with time; it can be arbitrary). Because $s(t)$ is periodic, we can take the average over just one period, which we call $T$.
+\[Mean[s^2(t)] = \frac{1}{T} \int_0^T s^2(t)\; dt.\]
+Now all we're left with is ``root," which as you can imagine, is just a square root:
+\[\boxed{ RMS[s(t)] = \sqrt{Mean(s^2(t))} = \sqrt{\frac{1}{T} \int_0^T s^2(t)\; dt}.}\]
+
+\section{Transmission}
+
+\subsection{Transmission Intervals}
+If you're sending information over a channel with a periodic signal, then it's important to differentiate different components of the information (you can think of this in terms of bits, letters, numbers, words, etc.); that is, we want to know where one symbol stops and where another one starts.
+
+The solution is to use a {\bf transmission interval}, a set length of time which corresponds to one bit of information. Because the signals that we're sending will almost always be periodic, then it intuitively makes sense that our transmission interval should be {\bf an integer multiple of the period}. Thus, note here the smallest (and most efficient) transmission interval is one period (which you saw in Problem 1.2a).
+
+\subsection{Encoding Amplitudes}
+In problem 1.2c, you're asked about the data rate for encoding $N$ different amplitude values. First, it's important to understand that encoding simply means ``converting to bits," and the resultant bits are then sent across a communication channel.
+
+Now instead of thinking of converting numbers to bits, imagine the opposite situation: converting bits to numbers. suppose you have a bit string of length $L$. Each bit can have two values, 0 or 1, so the total number of unique bit strings you can have must be $2^L$. Furthermore, you can say each bit string corresponds to a different amplitude value, so that now you can express the total number of amplitude values represented:
+\[N=2^L.\]
+Now going back to the original problem, we can obtain the number of bits needed for $N$ amplitude values. This is equivalent to the {\bf minimum length of a bit string} needed for $N$ amplitude values, which means we solve for $L$:
+\[L = \log_2{N}.\]
+
+\section{Trigonometry}
+
+\subsection{Sum Formulas}
+
+\[ \sin{(x+y)} = \sin{x}\cos{y} + \cos{x}\sin{y}. \]
+\[ \cos{(x+y)} = \cos{x}\cos{y} - \sin{x}\sin{y}. \]
+
+\subsection{Double-Angle Formulas}
+Use the sum formulas with $x=y$:
+\[ \sin{(2x)} = \sin{(x+x)} = \sin{x}\cos{x} + \cos{x}\sin{x} = 2\sin{x}\cos{x}. \]
+\[ \cos{(2x)} = \cos{(x+y)} = \cos{x}\cos{x} - \sin{x}\sin{x} =  \cos^2{x} - \sin^2{x}. \]
+
+\subsection{Sine and Cosine: The Connection}
+Consider a right triangle with hypotenuse 1, and let the two acute angles be $\theta$ and $\phi$. Then because the sum of all angles in a triangle is $180^\circ$, or $\pi$, then:
+\[ \frac{\pi}{2} + \theta + \phi = \pi \Longrightarrow \theta + \phi = \frac{\pi}{2}.\]
+Furthermore, you can notice that $\sin{\theta}$ = $\cos{\phi}$ and $\cos{\theta}$ = $\sin{\phi}$. Using the result above, we can then say:
+\[ \sin{\theta} = \cos{\phi} = \cos{\left( \frac{\pi}{2} - \theta \right)}.\]
+\[ \cos{\theta} = \sin{\phi} = \sin{\left( \frac{\pi}{2} - \theta \right)}.\]
+This allows us to convert between sines and cosines flexibly (very useful for Problem 2.4c).
+
+\section{Complex Exponentials}
+
+\subsection{Euler's Formula}
+
+\subsubsection{Definition and Decomposition}
+Euler's formula is:
+\[\boxed{ e^{j\theta} = \cos{\theta} + j\sin{\theta}. }\]
+There are a few things that are really cool about this! First, notice that the complex exponential has been broken up, or decomposed, into a {\bf real part}, $\cos{\theta}$, and an {\bf imaginary part}, $\sin{\theta}$. We can write this formally as:
+\begin{eqnarray*}
+\cos{\theta} &=& \mbox{Re}[e^{j\theta}]. \\
+\sin{\theta} &=& \mbox{Im}[e^{j\theta}].
+\end{eqnarray*}
+But what if we wanted to represent $\sin{\theta}$ as a real part or $\cos{\theta}$ as an imaginary part? Well, if we multiply both sides by $j$:
+\[je^{j\theta} = j\cos{\theta} - \sin{\theta}.\]
+Now all that's left is to be careful with signs:
+\begin{eqnarray*}
+\cos{\theta} &=& \mbox{Im}[je^{j\theta}] . \\
+\sin{\theta} &=& -\mbox{Re}[je^{j\theta}].
+\end{eqnarray*}
+
+\subsubsection{Geometric Interpretation}
+
+Now what if we tried to graph this formula? Let's represent it as a coordinate pair in the complex plane, with the $x$-axis corresponding to the real part and the $y$-axis corresponding to the imaginary part:
+\[e^{j\theta} = (\cos{\theta},\sin{\theta}).\]
+This looks familiar: in fact, recall from the definition of the unit circle that any point on the boundary has coordinates exactly like those above. Thus, $e^{j\theta}$ corresponds to a rotation along the unit circle by an angle $\theta$.
+
+\subsection{Representing Sines and Cosines with Complex Exponentials}
+
+Let's write Euler's formula again:
+\[e^{j\theta} = \cos{\theta} + j\sin{\theta}.\]
+Now if we substitute $\theta$ with $-\theta$:
+\begin{eqnarray*}
+& & e^{j(-\theta)} = \cos{(-\theta)} + j\sin{(-\theta)}\\
+& \Longrightarrow & e^{-j\theta} = \cos{\theta} - j\sin{\theta}.\\
+\end{eqnarray*}
+From here we have two equations and two ``unknowns." To solve for $\cos{\theta}$, we add:
+\[ e^{j\theta} + e^{-j\theta} = 2\cos{\theta} \Longrightarrow \boxed{ \cos{\theta} = \frac{ e^{j\theta} + e^{-j\theta}}{2}. } \]
+To solve for $\sin{\theta}$, we subtract:
+\[ e^{j\theta} - e^{-j\theta} = 2j\sin{\theta} \Longrightarrow \boxed{ \sin{\theta} = \frac{ e^{j\theta} - e^{-j\theta}}{2j}.} \]
+Converting all trigonometric functions to complex exponentials gives one the {\bf phasor representation} of a signal.
+
+\section{Steps and Ramps}
+
+\subsection{Definition}
+
+The {\bf unit step function} can be written as:
+\begin{eqnarray*}
+u(t) &=& \left\{
+	\begin{array}{lr}
+	0; t < 0 \\
+	1; t \geq 0 \\
+	\end{array} \right. \\
+\end{eqnarray*}
+The {\bf ramp} is the integral of the unit step over all time, which is:
+\begin{eqnarray*}
+r(t) &=& \left\{
+	\begin{array}{lr}
+	0; t < 0 \\
+	t; t \geq 0 \\
+	\end{array} \right. \\
+&=& tu(t).
+\end{eqnarray*}
+
+\subsection{Combining Steps and Ramps}
+
+In Problem 2.6, you're asked to decompose a graphed function into steps and ramps. There's a systematic approach you can use to make solving the problems easier:
+\begin{itemize}
+\item {\bf Write down the times when the graph changes.} This must mean that a function started at that point.
+\item {\bf Notice the type of change at each point.} There are two types of changes: a jump discontinuity (corresponding to a unit step) or a change in slope (corresponding to a ramp).
+\item {\bf Combine to create a sum of steps and ramps.} Make sure that your individual functions are delayed at the proper times.
+\end{itemize}
+{\bf Something to keep in mind}: A ramp does not go away unless you cancel it! Even if you add a unit step at a point, the graph will continue to go up or down unless you cancel it with another delayed ramp. Alternatively, you can make the graph slope even faster by contributing another ramp.
+
+
+\end{document}
